@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import ActorGrid from '../Component/Actors/ActorGrid';
 import MainPageLayout from '../Component/MainPageLayout';
 import ShowGrid from '../Component/Shows/ShowGrid';
@@ -15,7 +15,7 @@ const Home = () => {
   };
 
   const onSearch = () => {
-    getAPI(`search/${searchOption}?q=${input}`).then(data => {
+    getAPI(`/search/${searchOption}?q=${input}`).then(data => {
       setResults(data);
     });
   };
@@ -30,7 +30,11 @@ const Home = () => {
     if (results && results.length === 0) return <div>No results found!</div>;
 
     if (results && results.length > 0)
-      return results[0].show ? <ShowGrid  data={results} /> : <ActorGrid data={results}/>;
+      return results[0].show ? (
+        <ShowGrid data={results} />
+      ) : (
+        <ActorGrid data={results} />
+      );
 
     return null;
   };
