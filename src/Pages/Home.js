@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import ActorGrid from '../Component/Actors/ActorGrid';
 import MainPageLayout from '../Component/MainPageLayout';
 import ShowGrid from '../Component/Shows/ShowGrid';
 import { getAPI } from '../helpers/config';
 import { UseLastQuery } from '../helpers/custom-hooks';
-import CustomRadio from './CustomRadio';
+import CustomRadio from '../Component/CustomRadio';
 import {
     RadioInputsWrapper,
     SearchButtonWrapper,
     SearchInput,
 } from './Home.styled';
+
+const renderResults = results => {
+    if (results && results.length === 0) return <div>No results found!</div>;
+
+    if (results && results.length > 0)
+        return results[0].show ? (
+            <ShowGrid data={results} />
+        ) : (
+            <ActorGrid data={results} />
+        );
+
+    return null;
+};
 
 const Home = () => {
     const [input, ChangeInput] = UseLastQuery();
@@ -18,9 +31,12 @@ const Home = () => {
     const [searchOption, setSearchOption] = useState('shows');
     const isShowsSelected = searchOption === 'shows';
 
-    const handleInputChange = e => {
-        ChangeInput(e.target.value);
-    };
+    const handleInputChange = useCallback(
+        e => {
+            ChangeInput(e.target.value);
+        },
+        [ChangeInput]
+    );
 
     const onSearch = () => {
         getAPI(`/search/${searchOption}?q=${input}`).then(data => {
@@ -34,23 +50,9 @@ const Home = () => {
         }
     };
 
-    const renderResults = () => {
-        if (results && results.length === 0)
-            return <div>No results found!</div>;
-
-        if (results && results.length > 0)
-            return results[0].show ? (
-                <ShowGrid data={results} />
-            ) : (
-                <ActorGrid data={results} />
-            );
-
-        return null;
-    };
-
-    const handleSearchOption = e => {
+    const handleSearchOption = useCallback(e => {
         setSearchOption(e.target.value);
-    };
+    }, []);
 
     return (
         <MainPageLayout>
@@ -88,7 +90,7 @@ const Home = () => {
                     search
                 </button>
             </SearchButtonWrapper>
-            {renderResults()}
+            {renderResults(results)}
         </MainPageLayout>
     );
 };

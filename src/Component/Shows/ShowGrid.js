@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import React, { useCallback } from 'react';
 import ShowCard from './ShowCard';
 import NOT_FOUND_IMAGE from '../../images/not-found.png';
 import { FlexGrid } from '../styled';
@@ -11,11 +12,11 @@ const ShowGrid = ({ data }) => {
             {data.map(({ show }) => {
                 const isStarred = StarredState.includes(show.id);
 
-                const onStarClick = () => {
+                const onStarClick = useCallback( () => {
                     if (isStarred) {
                         StarredDisptach({ type: 'REMOVE', showID: show.id });
                     } else StarredDisptach({ type: 'ADD', showID: show.id });
-                };
+                },[isStarred,show.id]);
 
                 return (
                     <ShowCard
