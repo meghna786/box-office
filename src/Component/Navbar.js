@@ -1,21 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router';
+import { LinkStyled, NavList } from './Navbar.styled';
+
+const LINKS = [
+  { to: '/', text: 'Home' },
+  { to: '/starred', text: 'Starred' },
+];
+
 
 const Navbar = () => {
-  const LINKS = [
-    { to: '/', text: 'Home' },
-    { to: '/starred', text: 'Starred' },
-  ];
-
+  const location=useLocation();
+  // eslint-disable-next-line no-console
+  console.log('location is', location);
   return (
     <div>
-      <ul>
+      <NavList>
         {LINKS.map(item => (
           <li key={item.to}>
-            <Link to={item.to}>{item.text}</Link>
+            <LinkStyled className={location.pathname===item.to?'active':''} to={item.to}>{item.text}</LinkStyled>
           </li>
         ))}
-      </ul>
+      </NavList>
     </div>
   );
 };
